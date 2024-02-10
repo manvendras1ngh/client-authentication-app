@@ -3,8 +3,9 @@ import {Link, useNavigate} from "react-router-dom";
 
 import profile from "../images/account_circle.svg";
 
-export default function Login(){
+export default function Login({change}){
     const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = useState(false);
     const [formData, setFormData] = useState({
         username:"",
         password:"",
@@ -24,8 +25,16 @@ export default function Login(){
                     body: urlEncodedData,
                 });
                 const data = await res.json();
-                localStorage.setItem("userData", JSON.stringify(data));
-                navigate("/user-details");
+                if(data.message === "Login Successfull"){
+                    localStorage.setItem("userData", JSON.stringify(data));
+                    setErrorMessage(false);
+                    change(true);
+                    navigate("/user-details");
+                }else{
+                    setErrorMessage(true);
+                    change(false);
+                    navigate("/");
+                }
             }catch(error){
                 console.error("Encountered error", error);
             };
@@ -48,7 +57,7 @@ export default function Login(){
     return(
         <div className="card login-dimension">
             <h1>SIGN IN</h1>
-            <img src = {profile}/>
+            <img alt = "profile annotation" src = {profile}/>
             <form className="card__form" onSubmit={handleSubmit}>
                 <input
                     required
@@ -66,6 +75,7 @@ export default function Login(){
                     onChange={handleChange} 
                     name="password"
                 />
+                <span>{errorMessage ? "Invalid Credentials!" : null}</span>
                 <Link to="/signup">No account! Signup</Link>
                 <button>LOGIN</button>
             </form>

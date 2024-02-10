@@ -53,7 +53,7 @@ export default function Signup(){
     return(
         <div className="card signup-dimension">
             <h1>SIGN UP</h1>
-            <img src = {profile}/>
+            <img alt = "profile annotation" src = {profile}/>
             <form className="card__form" onSubmit={handleSubmit}>
                 <input
                     required
